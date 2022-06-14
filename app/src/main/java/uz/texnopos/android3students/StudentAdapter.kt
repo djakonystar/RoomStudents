@@ -21,6 +21,10 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
             binding.apply {
                 tvName.text = student.name
                 tvPhone.text = student.phone
+
+                ivPhone.setOnClickListener {
+                    onPhoneClick.invoke(student.phone)
+                }
             }
         }
     }
@@ -35,5 +39,10 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         holder.bind(models[position])
+    }
+
+    private var onPhoneClick: (phone: String) -> Unit = {}
+    fun setOnPhoneClickListener(phoneClick: (phone: String) -> Unit) {
+        this.onPhoneClick = phoneClick
     }
 }

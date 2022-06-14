@@ -23,6 +23,10 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             adapter.models = studentDao.getAllStudents()
 
+            adapter.setOnPhoneClickListener { phone ->
+
+            }
+
             rvStudents.adapter = adapter
         }
     }
