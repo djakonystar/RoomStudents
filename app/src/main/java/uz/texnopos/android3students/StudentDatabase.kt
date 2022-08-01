@@ -27,7 +27,6 @@ abstract class StudentDatabase : RoomDatabase() {
                     "android3.db"
                 )
                     .createFromAsset("android3.db")
-                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = db
                 return db
