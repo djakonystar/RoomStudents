@@ -30,6 +30,19 @@
             app:layout_constraintTop_toBottomOf="@id/tv_name" />
 
         <ImageView
+            android:id="@+id/iv_favorite"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
+            android:src="@drawable/ic_favorite_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_phone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#E91E63" />
+
+        <ImageView
             android:id="@+id/iv_phone"
             android:layout_width="32dp"
             android:layout_height="32dp"

@@ -21,6 +21,21 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
             binding.apply {
                 tvName.text = student.name
                 tvPhone.text = student.phone
+
+                if (student.isFavorite == 1) {
+                    ivFavorite.setImageResource(R.drawable.ic_favorite)
+                } else {
+                    ivFavorite.setImageResource(R.drawable.ic_favorite_border)
+                }
+
+                ivFavorite.setOnClickListener {
+                    onClick(student)
+                    if (student.isFavorite == 1) {
+                        ivFavorite.setImageResource(R.drawable.ic_favorite)
+                    } else {
+                        ivFavorite.setImageResource(R.drawable.ic_favorite_border)
+                    }
+                }
             }
         }
     }
@@ -35,5 +50,10 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
         holder.bind(models[position])
+    }
+
+    private var onClick: (student: Student) -> Unit = {}
+    fun setOnClick(onClick: (student: Student) -> Unit) {
+        this.onClick = onClick
     }
 }
