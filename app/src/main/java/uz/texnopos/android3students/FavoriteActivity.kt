@@ -3,6 +3,8 @@ package uz.texnopos.android3students
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import uz.texnopos.android3students.data.dao.StudentDao
 import uz.texnopos.android3students.databinding.ActivityFavoriteBinding
 
@@ -21,7 +23,9 @@ class FavoriteActivity : AppCompatActivity() {
         studentDao = StudentDatabase.getInstance(this).studentDao()
 
         binding.apply {
-            adapter.models = studentDao.getFavorites()
+            lifecycleScope.launch {
+                adapter.models = studentDao.getFavorites()
+            }
 
             recyclerView.adapter = adapter
         }
