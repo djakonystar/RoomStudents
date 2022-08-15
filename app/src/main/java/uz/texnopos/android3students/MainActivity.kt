@@ -1,10 +1,15 @@
 package uz.texnopos.android3students
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uz.texnopos.android3students.data.dao.StudentDao
 import uz.texnopos.android3students.databinding.ActivityMainBinding
 
@@ -23,13 +28,24 @@ class MainActivity : AppCompatActivity() {
         studentDao = StudentDatabase.getInstance(this).studentDao()
 
         binding.apply {
-            adapter.models = studentDao.getAllStudents()
+            lifecycleScope.launch {
+                try {
+                    val response = studentDao.getAllStudents()
+                    withContext(Dispatchers.Main) {
+                        adapter.models = response
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(this@MainActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
 
             rvStudents.adapter = adapter
 
             adapter.setOnClick { student ->
                 student.isFavorite = 1 - student.isFavorite
-                studentDao.updateStudent(student)
+                lifecycleScope.launch {
+                    studentDao.updateStudent(student)
+                }
             }
 
             fabFavorite.setOnClickListener {
@@ -60,8 +76,12 @@ class MainActivity : AppCompatActivity() {
             searchView.addTextChangedListener {
                 it?.let { editable ->
                     val searchValue = editable.toString()
-                    val newList = studentDao.searchStudents("%$searchValue%")
-                    adapter.models = newList
+                    lifecycleScope.launch {
+                        val newList = studentDao.searchStudents("%$searchValue%")
+                        withContext(Dispatchers.Main) {
+                            adapter.models = newList
+                        }
+                    }
                 }
             }
         }
