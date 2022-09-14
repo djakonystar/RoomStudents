@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val adapter = StudentAdapter()
     private lateinit var studentDao: StudentDao
+    private val viewModel: MainViewModel by lazy { MainViewModel(studentDao) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -28,16 +29,7 @@ class MainActivity : AppCompatActivity() {
         studentDao = StudentDatabase.getInstance(this).studentDao()
 
         binding.apply {
-            lifecycleScope.launch {
-                try {
-                    val response = studentDao.getAllStudents()
-                    withContext(Dispatchers.Main) {
-                        adapter.models = response
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(this@MainActivity, e.localizedMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
+            viewModel.getAllStudents()
 
             rvStudents.adapter = adapter
 
@@ -53,26 +45,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-//            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//                override fun onQueryTextChange(newText: String?): Boolean {
-//                    newText?.let { searchValue ->
-//                        val newList = studentDao.searchStudents("%$searchValue%")
-//                        adapter.models = newList
-//                        return true
-//                    }
-//                    return false
-//                }
-//
-//                override fun onQueryTextSubmit(query: String?): Boolean {
-//                    query?.let { searchValue ->
-//                        val newList = studentDao.searchStudents("%$searchValue%")
-//                        adapter.models = newList
-//                        return true
-//                    }
-//                    return false
-//                }
-//            })
-
             searchView.addTextChangedListener {
                 it?.let { editable ->
                     val searchValue = editable.toString()
@@ -84,6 +56,14 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+        setUpObservers()
+    }
+
+    private fun setUpObservers() {
+        viewModel.students.observe(this) {
+            adapter.models = it
         }
     }
 }
