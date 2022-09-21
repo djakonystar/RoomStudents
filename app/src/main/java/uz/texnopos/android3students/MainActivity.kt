@@ -3,6 +3,8 @@ package uz.texnopos.android3students
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
+import androidx.core.widget.addTextChangedListener
 import uz.texnopos.android3students.data.dao.StudentDao
 import uz.texnopos.android3students.databinding.ActivityMainBinding
 
@@ -24,6 +26,34 @@ class MainActivity : AppCompatActivity() {
             adapter.models = studentDao.getAllStudents()
 
             rvStudents.adapter = adapter
+
+//            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//                override fun onQueryTextChange(newText: String?): Boolean {
+//                    newText?.let { searchValue ->
+//                        val newList = studentDao.searchStudents("%$searchValue%")
+//                        adapter.models = newList
+//                        return true
+//                    }
+//                    return false
+//                }
+//
+//                override fun onQueryTextSubmit(query: String?): Boolean {
+//                    query?.let { searchValue ->
+//                        val newList = studentDao.searchStudents("%$searchValue%")
+//                        adapter.models = newList
+//                        return true
+//                    }
+//                    return false
+//                }
+//            })
+
+            searchView.addTextChangedListener {
+                it?.let { editable ->
+                    val searchValue = editable.toString()
+                    val newList = studentDao.searchStudents("%$searchValue%")
+                    adapter.models = newList
+                }
+            }
         }
     }
 }
