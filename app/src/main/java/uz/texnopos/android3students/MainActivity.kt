@@ -25,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         binding.apply {
             adapter.models = studentDao.getAllStudents()
 
+            adapter.setOnPhoneClickListener { phone ->
+
+            }
+
             rvStudents.adapter = adapter
 
 //            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
