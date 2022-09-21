@@ -1,5 +1,6 @@
 package uz.texnopos.android3students
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
@@ -30,6 +31,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             rvStudents.adapter = adapter
+
+            adapter.setOnClick { student ->
+                student.isFavorite = 1 - student.isFavorite
+                studentDao.updateStudent(student)
+            }
+
+            fabFavorite.setOnClickListener {
+                val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
+                startActivity(intent)
+            }
 
 //            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 //                override fun onQueryTextChange(newText: String?): Boolean {

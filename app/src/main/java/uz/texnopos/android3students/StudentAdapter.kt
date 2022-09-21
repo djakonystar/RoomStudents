@@ -25,6 +25,21 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
                 ivPhone.setOnClickListener {
                     onPhoneClick.invoke(student.phone)
                 }
+
+                if (student.isFavorite == 1) {
+                    ivFavorite.setImageResource(R.drawable.ic_favorite)
+                } else {
+                    ivFavorite.setImageResource(R.drawable.ic_favorite_border)
+                }
+
+                ivFavorite.setOnClickListener {
+                    onClick(student)
+                    if (student.isFavorite == 1) {
+                        ivFavorite.setImageResource(R.drawable.ic_favorite)
+                    } else {
+                        ivFavorite.setImageResource(R.drawable.ic_favorite_border)
+                    }
+                }
             }
         }
     }
@@ -44,5 +59,10 @@ class StudentAdapter : RecyclerView.Adapter<StudentAdapter.StudentViewHolder>() 
     private var onPhoneClick: (phone: String) -> Unit = {}
     fun setOnPhoneClickListener(phoneClick: (phone: String) -> Unit) {
         this.onPhoneClick = phoneClick
+    }
+
+    private var onClick: (student: Student) -> Unit = {}
+    fun setOnClick(onClick: (student: Student) -> Unit) {
+        this.onClick = onClick
     }
 }
