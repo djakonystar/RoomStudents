@@ -2,7 +2,10 @@ package uz.texnopos.android3students
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import uz.texnopos.android3students.data.dao.StudentDao
 import uz.texnopos.android3students.databinding.ActivityFavoriteBinding
 
@@ -21,7 +24,21 @@ class FavoriteActivity : AppCompatActivity() {
         studentDao = StudentDatabase.getInstance(this).studentDao()
 
         binding.apply {
-            adapter.models = studentDao.getFavorites()
+            studentDao.getFavorites()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { list ->
+                        adapter.models = list
+                    },
+                    { error ->
+                        Toast.makeText(
+                            this@FavoriteActivity,
+                            error.localizedMessage,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                )
 
             recyclerView.adapter = adapter
         }
